@@ -70,7 +70,32 @@ fn keyboard_tts(mut tts: ResMut<Mytts>, keyboard_input: Res<Input<KeyCode>>) {
     if keyboard_input.just_released(KeyCode::A) {
         info!("'A' just released");
 
-        tts.0.speak("You Win!", true).unwrap();
+        tts.0.speak("Win!", true).unwrap();
+    }
+    if keyboard_input.just_released(KeyCode::B) {
+        info!("'B' just released");
+
+        tts.0.speak("I", true).unwrap();
+    }
+    if keyboard_input.just_released(KeyCode::C) {
+        info!("'C' just released");
+
+        tts.0.speak("am", true).unwrap();
+    }
+    if keyboard_input.just_released(KeyCode::D) {
+        info!("'D' just released");
+
+        tts.0.speak("robot", true).unwrap();
+    }
+    if keyboard_input.just_released(KeyCode::E) {
+        info!("'E' just released");
+
+        tts.0.speak("ahuuhuuueuueuuuuuuhhh", true).unwrap();
+    }
+    if keyboard_input.just_released(KeyCode::F) {
+        info!("'F' just released");
+
+        tts.0.speak("you", true).unwrap();
     }
 }
 
