@@ -1,6 +1,7 @@
 // Is this a comment?
 
 use bevy::prelude::*;
+use tts::*;
 
 #[derive(Component)]
 struct Person;
@@ -29,8 +30,10 @@ fn main() {
     println!("Hello, world! {}", my_string);
 
     App::new()
+        .init_resource::<Mytts>()
         .add_plugins(DefaultPlugins)
         .add_plugin(HelloPlugin)
+        .add_system(keyboard_tts)
         .run();
 }
 
@@ -62,3 +65,19 @@ fn greet_people(time: Res<Time>, mut timer: ResMut<GreetTimer>, query: Query<&Na
         }
     }
 }
+
+fn keyboard_tts(mut tts: ResMut<Mytts>, keyboard_input: Res<Input<KeyCode>>) {
+    if keyboard_input.just_released(KeyCode::A) {
+        info!("'A' just released");
+
+        tts.0.speak("You Win!", true).unwrap();
+    }
+}
+
+impl FromWorld for Mytts {
+    fn from_world(world: &mut World) -> Self {
+        Mytts(Tts::default().unwrap())
+    }
+}
+
+struct Mytts(Tts);
