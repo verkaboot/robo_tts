@@ -1,6 +1,6 @@
 // Is this a comment?
 
-use bevy::prelude::*;
+use bevy::{prelude::*, reflect::Tuple};
 use tts::*;
 
 #[derive(Component)]
@@ -13,6 +13,26 @@ pub struct HelloPlugin;
 
 struct GreetTimer {
     timer: Timer,
+}
+
+fn words() -> Vec<RobotWord> {
+    vec![
+        RobotWord {
+            keycode: KeyCode::Q,
+            label: "THE".to_string(),
+            pronunciation: "thee".to_string(),
+        },
+        RobotWord {
+            keycode: KeyCode::W,
+            label: "BE".to_string(),
+            pronunciation: "bee".to_string(),
+        },
+    ]
+}
+struct RobotWord {
+    keycode: KeyCode,
+    label: String,
+    pronunciation: String,
 }
 
 impl Plugin for HelloPlugin {
@@ -127,63 +147,80 @@ fn keyboard_tts(
     mut query: Query<&mut Text, With<ColorText>>,
 ) {
     for mut text in query.iter_mut() {
-        if keyboard_input.just_released(KeyCode::Q) {
-            info!("'the' just released");
-            text.sections[0].value = "THE".to_string();
+        for robotword in words() {
+            if keyboard_input.just_released(robotword.keycode) {
+                info!("{} just released", robotword.label);
+                text.sections[0].value = robotword.label;
 
-            tts.0.speak("thee", true).unwrap();
+                tts.0.speak(robotword.pronunciation, true).unwrap();
+            }
         }
-        if keyboard_input.just_released(KeyCode::W) {
-            info!("'be' just released");
-            text.sections[0].value = "BE".to_string();
+        // if keyboard_input.just_released(KeyCode::Q) {
+        //     info!("'the' just released");
+        //     text.sections[0].value = "THE".to_string();
 
-            tts.0.speak("bee", true).unwrap();
-        }
-        if keyboard_input.just_released(KeyCode::E) {
-            info!("'to' just released");
+        //     tts.0.speak("thee", true).unwrap();
+        // }
+        // if keyboard_input.just_released(KeyCode::W) {
+        //     info!("'be' just released");
+        //     text.sections[0].value = "BE".to_string();
 
-            tts.0.speak("two", true).unwrap();
-        }
-        if keyboard_input.just_released(KeyCode::R) {
-            info!("'of' just released");
+        //     tts.0.speak("bee", true).unwrap();
+        // }
+        // if keyboard_input.just_released(KeyCode::E) {
+        //     info!("'to' just released");
+        //     text.sections[0].value = "TO".to_string();
 
-            tts.0.speak("of", true).unwrap();
-        }
-        if keyboard_input.just_released(KeyCode::T) {
-            info!("'and' just released");
+        //     tts.0.speak("two", true).unwrap();
+        // }
+        // if keyboard_input.just_released(KeyCode::R) {
+        //     info!("'of' just released");
+        //     text.sections[0].value = "OF".to_string();
 
-            tts.0.speak("and", true).unwrap();
-        }
-        if keyboard_input.just_released(KeyCode::Y) {
-            info!("'a' just released");
+        //     tts.0.speak("of", true).unwrap();
+        // }
+        // if keyboard_input.just_released(KeyCode::T) {
+        //     info!("'and' just released");
+        //     text.sections[0].value = "AND".to_string();
 
-            tts.0.speak("A", true).unwrap();
-        }
-        if keyboard_input.just_released(KeyCode::U) {
-            info!("'in' just released");
+        //     tts.0.speak("and", true).unwrap();
+        // }
+        // if keyboard_input.just_released(KeyCode::Y) {
+        //     info!("'a' just released");
+        //     text.sections[0].value = "A".to_string();
 
-            tts.0.speak("inn", true).unwrap();
-        }
-        if keyboard_input.just_released(KeyCode::I) {
-            info!("'that' just released");
+        //     tts.0.speak("A", true).unwrap();
+        // }
+        // if keyboard_input.just_released(KeyCode::U) {
+        //     info!("'in' just released");
+        //     text.sections[0].value = "IN".to_string();
 
-            tts.0.speak("that", true).unwrap();
-        }
-        if keyboard_input.just_released(KeyCode::O) {
-            info!("'have' just released");
+        //     tts.0.speak("inn", true).unwrap();
+        // }
+        // if keyboard_input.just_released(KeyCode::I) {
+        //     info!("'that' just released");
+        //     text.sections[0].value = "THAT".to_string();
 
-            tts.0.speak("have", true).unwrap();
-        }
-        if keyboard_input.just_released(KeyCode::P) {
-            info!("'I' just released");
+        //     tts.0.speak("that", true).unwrap();
+        // }
+        // if keyboard_input.just_released(KeyCode::O) {
+        //     info!("'have' just released");
+        //     text.sections[0].value = "HAVE".to_string();
 
-            tts.0.speak("eye", true).unwrap();
-        }
-        if keyboard_input.just_released(KeyCode::A) {
-            info!("'ahuuhuueueueueh' just released");
+        //     tts.0.speak("have", true).unwrap();
+        // }
+        // if keyboard_input.just_released(KeyCode::P) {
+        //     info!("'I' just released");
+        //     text.sections[0].value = "I".to_string();
 
-            tts.0.speak("ahuuhuuueuueuuuuuuhhh", true).unwrap();
-        }
+        //     tts.0.speak("eye", true).unwrap();
+        // }
+        // if keyboard_input.just_released(KeyCode::A) {
+        //     info!("'ahuuhuueueueueh' just released");
+        //     text.sections[0].value = "ahuuhuuueuueuuuuuuhhh".to_string();
+
+        //     tts.0.speak("ahuuhuuueuueuuuuuuhhh", true).unwrap();
+        // }
     }
 }
 
