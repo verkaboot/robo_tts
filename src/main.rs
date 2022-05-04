@@ -32,6 +32,7 @@ fn main() {
     App::new()
         .init_resource::<Mytts>()
         .add_startup_system(setup_text)
+        .add_system(text_color_system)
         .add_plugins(DefaultPlugins)
         .add_plugin(HelloPlugin)
         .add_system(keyboard_tts)
@@ -55,8 +56,8 @@ fn setup_text(mut commands: Commands, asset_server: Res<AssetServer>) {
                 align_self: AlignSelf::FlexEnd,
                 position_type: PositionType::Absolute,
                 position: Rect {
-                    bottom: Val::Px(5.0),
-                    right: Val::Px(15.0),
+                    top: Val::Px(5.0),
+                    left: Val::Px(15.0),
                     ..default()
                 },
                 ..default()
@@ -64,7 +65,7 @@ fn setup_text(mut commands: Commands, asset_server: Res<AssetServer>) {
             // Use the `Text::with_section` constructor
             text: Text::with_section(
                 // Accepts a `String` or any type that converts into a `String`, such as `&str`
-                "hello\nbevy!",
+                "Robot\nTalkin!",
                 TextStyle {
                     font: asset_server.load("font/aliee13.ttf"),
                     font_size: 100.0,
@@ -79,6 +80,20 @@ fn setup_text(mut commands: Commands, asset_server: Res<AssetServer>) {
             ..default()
         })
         .insert(ColorText);
+}
+
+fn text_color_system(time: Res<Time>, mut query: Query<&mut Text, With<ColorText>>) {
+    for mut text in query.iter_mut() {
+        let seconds = time.seconds_since_startup() as f32;
+        // We used the `Text::with_section` helper method, but it is still just a `Text`,
+        // so to update it, we are still updating the one and only section
+        text.sections[0].style.color = Color::Rgba {
+            red: (1.25 * seconds).sin() / 2.0 + 0.5,
+            green: (0.75 * seconds).sin() / 2.0 + 0.5,
+            blue: (0.50 * seconds).sin() / 2.0 + 0.5,
+            alpha: 1.0,
+        };
+    }
 }
 
 fn add_people(mut commands: Commands) {
@@ -106,61 +121,69 @@ fn greet_people(time: Res<Time>, mut timer: ResMut<GreetTimer>, query: Query<&Na
     }
 }
 
-fn keyboard_tts(mut tts: ResMut<Mytts>, keyboard_input: Res<Input<KeyCode>>) {
-    if keyboard_input.just_released(KeyCode::Q) {
-        info!("'the' just released");
+fn keyboard_tts(
+    mut tts: ResMut<Mytts>,
+    keyboard_input: Res<Input<KeyCode>>,
+    mut query: Query<&mut Text, With<ColorText>>,
+) {
+    for mut text in query.iter_mut() {
+        if keyboard_input.just_released(KeyCode::Q) {
+            info!("'the' just released");
+            text.sections[0].value = "THE".to_string();
 
-        tts.0.speak("thee", true).unwrap();
-    }
-    if keyboard_input.just_released(KeyCode::W) {
-        info!("'be' just released");
+            tts.0.speak("thee", true).unwrap();
+        }
+        if keyboard_input.just_released(KeyCode::W) {
+            info!("'be' just released");
+            text.sections[0].value = "BE".to_string();
 
-        tts.0.speak("bee", true).unwrap();
-    }
-    if keyboard_input.just_released(KeyCode::E) {
-        info!("'to' just released");
+            tts.0.speak("bee", true).unwrap();
+        }
+        if keyboard_input.just_released(KeyCode::E) {
+            info!("'to' just released");
 
-        tts.0.speak("two", true).unwrap();
-    }
-    if keyboard_input.just_released(KeyCode::R) {
-        info!("'of' just released");
+            tts.0.speak("two", true).unwrap();
+        }
+        if keyboard_input.just_released(KeyCode::R) {
+            info!("'of' just released");
 
-        tts.0.speak("of", true).unwrap();
-    }
-    if keyboard_input.just_released(KeyCode::T) {
-        info!("'and' just released");
+            tts.0.speak("of", true).unwrap();
+        }
+        if keyboard_input.just_released(KeyCode::T) {
+            info!("'and' just released");
 
-        tts.0.speak("and", true).unwrap();
-    }
-    if keyboard_input.just_released(KeyCode::Y) {
-        info!("'a' just released");
+            tts.0.speak("and", true).unwrap();
+        }
+        if keyboard_input.just_released(KeyCode::Y) {
+            info!("'a' just released");
 
-        tts.0.speak("A", true).unwrap();
-    }
-    if keyboard_input.just_released(KeyCode::U) {
-        info!("'in' just released");
+            tts.0.speak("A", true).unwrap();
+        }
+        if keyboard_input.just_released(KeyCode::U) {
+            info!("'in' just released");
 
-        tts.0.speak("inn", true).unwrap();
-    }
-    if keyboard_input.just_released(KeyCode::I) {
-        info!("'that' just released");
+            tts.0.speak("inn", true).unwrap();
+        }
+        if keyboard_input.just_released(KeyCode::I) {
+            info!("'that' just released");
 
-        tts.0.speak("that", true).unwrap();
-    }
-    if keyboard_input.just_released(KeyCode::O) {
-        info!("'have' just released");
+            tts.0.speak("that", true).unwrap();
+        }
+        if keyboard_input.just_released(KeyCode::O) {
+            info!("'have' just released");
 
-        tts.0.speak("have", true).unwrap();
-    }
-    if keyboard_input.just_released(KeyCode::P) {
-        info!("'I' just released");
+            tts.0.speak("have", true).unwrap();
+        }
+        if keyboard_input.just_released(KeyCode::P) {
+            info!("'I' just released");
 
-        tts.0.speak("eye", true).unwrap();
-    }
-    if keyboard_input.just_released(KeyCode::A) {
-        info!("'ahuuhuueueueueh' just released");
+            tts.0.speak("eye", true).unwrap();
+        }
+        if keyboard_input.just_released(KeyCode::A) {
+            info!("'ahuuhuueueueueh' just released");
 
-        tts.0.speak("ahuuhuuueuueuuuuuuhhh", true).unwrap();
+            tts.0.speak("ahuuhuuueuueuuuuuuhhh", true).unwrap();
+        }
     }
 }
 
